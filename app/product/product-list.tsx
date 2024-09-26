@@ -47,7 +47,7 @@ export default function ProductList() {
   if (pending) return <LoaderMoon />;
 
   return (
-    <div className="grid grid-cols-6 gap-2">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
       {data?.map((item) => (
         <div key={item.$id} className="border rounded p-2">
           <div>{item.name}</div>

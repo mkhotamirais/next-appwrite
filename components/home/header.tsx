@@ -39,26 +39,28 @@ export function Header() {
         <div>
           <Logo />
         </div>
-        <nav className="flex gap-4 text-sm">
-          <Link href="/">Home</Link>
-          <Link href="/product">Product</Link>
+        <nav className="flex items-center gap-4 text-sm">
+          {/* <div className="flex gap-4">
+            <Link href="/">Home</Link>
+            <Link href="/product">Product</Link>
+          </div> */}
+          {!user ? (
+            <div className="flex gap-2">
+              <Button asChild variant="outline">
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/register">Register</Link>
+              </Button>
+            </div>
+          ) : (
+            <Button variant={"secondary"} disabled={pending} onClick={onLogout}>
+              {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Logout
+            </Button>
+          )}
+          <ModeToggle />
         </nav>
-        {!user ? (
-          <div className="flex gap-2">
-            <Button asChild variant="outline">
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/register">Register</Link>
-            </Button>
-            <ModeToggle />
-          </div>
-        ) : (
-          <Button variant={"secondary"} disabled={pending} onClick={onLogout}>
-            {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Logout
-          </Button>
-        )}
       </div>
     </header>
   );
