@@ -24,13 +24,15 @@ export default function GalleryDelDialog({ id }: { id: string }) {
       .deleteFile(bucketId, id)
       .then(() => {
         toast.success(`Delete image success`);
-        document.getElementById(`dialog-close-${id}`)?.click();
       })
       .catch((err) => {
         console.log(err);
         toast.error(`Delete product failed`);
       })
-      .finally(() => setPending(false));
+      .finally(() => {
+        setPending(false);
+        document.getElementById(`dialog-close-${id}`)?.click();
+      });
   };
 
   return (

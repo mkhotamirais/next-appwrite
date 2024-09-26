@@ -26,7 +26,7 @@ export default function GalleryPage() {
 
     const unsubscribe = client.subscribe("files", (res) => {
       if (res.events.includes("buckets.*.files.*.create")) {
-        console.log("created");
+        setData((prev) => [res.payload, ...prev] as Bucket[]);
       }
       if (res.events.includes("buckets.*.files.*.delete")) {
         setData((prev) => prev.filter((item) => item.$id !== (res?.payload as Bucket).$id));
