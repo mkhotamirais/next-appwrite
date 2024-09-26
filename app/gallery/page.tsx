@@ -1,34 +1,126 @@
 "use client";
 
-import { bucketId, endpoint, storage, projectId } from "@/appwrite/config";
-import { useEffect, useState } from "react";
+import { bucketId, endpoint, storage, projectId, client } from "@/appwrite/config";
+import { FormEvent, useEffect, useState } from "react";
 import { Bucket } from "./types";
 import Image from "next/image";
+import { Query } from "appwrite";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Loader2, Trash } from "lucide-react";
+import GalleryDelDialog from "./gallery-del-dialog";
+import { toast } from "sonner";
 
 export default function GalleryPage() {
   const [data, setData] = useState<Bucket[]>([]);
+  const [preview, setPreview] = useState("");
+  const [pending, setPending] = useState(false);
+
   useEffect(() => {
     const getBucket = async () => {
-      await storage.listFiles(bucketId).then((res) => {
-        console.log(res.files);
+      await storage.listFiles(bucketId, [Query.orderDesc("$createdAt")]).then((res) => {
         setData(res.files as Bucket[]);
       });
     };
     getBucket();
+
+    const unsubscribe = client.subscribe("files", (res) => {
+      if (res.events.includes("buckets.*.files.*.create")) {
+        console.log("created");
+      }
+      if (res.events.includes("buckets.*.files.*.delete")) {
+        setData((prev) => prev.filter((item) => item.$id !== (res?.payload as Bucket).$id));
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
   }, []);
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const image = formData.get("image") as File | null;
+
+    if (!image) {
+      alert("Please select an image to upload.");
+      return;
+    }
+
+    try {
+      setPending(true);
+      await storage.createFile(bucketId, "unique()", image);
+      const updatedFiles = await storage.listFiles(bucketId, [Query.orderDesc("$createdAt")]);
+      setData(updatedFiles.files as Bucket[]);
+      setPreview("");
+      toast.success("Image uploaded successfully");
+    } catch (err) {
+      console.error("Error uploading the file:", err);
+    } finally {
+      setPending(false);
+    }
+  };
+
   return (
-    <div>
-      {data.map((item, i) => (
-        <div key={i}>
+    <div className="py-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-2">
+        <form onSubmit={onSubmit} className="flex gap-2">
+          <Input
+            name="image"
+            id="image"
+            type="file"
+            className="w-full"
+            onChange={(e) => {
+              const img = e.target.files?.[0];
+              if (img) {
+                const imgUrl = URL.createObjectURL(img);
+                setPreview(imgUrl);
+              }
+            }}
+          />
+          <Button disabled={pending || !preview} type="submit">
+            {pending && <Loader2 className="animate-spin size-4 mr-2" />}
+            {/* <Loader2 className="animate-spin size-4 mr-2" /> */}
+            Upload
+          </Button>
+        </form>
+      </div>
+
+      {preview && (
+        <div className="relative size-40 border p-1 rounded mb-2">
           <Image
-            src={`${endpoint}/storage/buckets/${bucketId}/files/${item.$id}/view?project=${projectId}`}
-            // src={`https://cloud.appwrite.io/v1/storage/buckets/66f58eb1002ac57b54e2/files/66f58f30003bd2361e26`}
-            alt={item.name}
+            src={preview}
+            alt="image preview"
             width={200}
             height={200}
+            className="object-cover object-center size-full"
           />
+          <div className="absolute top-0 right-0">
+            <Button size="icon" className="m-2" onClick={() => setPreview("")}>
+              <Trash className="size-4" />
+            </Button>
+          </div>
         </div>
-      ))}
+      )}
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+        {data.map((item, i) => (
+          <div key={i} className="relative border p-1 h-40">
+            <Image
+              src={`${endpoint}/storage/buckets/${bucketId}/files/${item.$id}/view?project=${projectId}`}
+              alt={item.name}
+              width={200}
+              height={200}
+              priority
+              className="object-center object-cover size-full"
+            />
+            <div className="absolute top-0 right-0 z-10 m-2">
+              <GalleryDelDialog id={item.$id} />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
