@@ -14,7 +14,8 @@ import { useRouter } from "next/navigation";
 
 const RegisterSchema = z
   .object({
-    email: z.string().email("Invalid email address"),
+    name: z.string().min(1, "Name is required"),
+    email: z.string().min(1, "Email is required").email("Invalid email address"),
     password: z.string().min(1, "Password is required"),
     confPassword: z.string().min(1, "Please confirm your password"),
   })
@@ -55,6 +56,19 @@ export function RegisterForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input disabled={pending} placeholder="Name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -83,7 +97,7 @@ export function RegisterForm() {
           name="confPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Confirm Password</FormLabel>
               <FormControl>
                 <Input disabled={pending} type="password" placeholder="********" {...field} />
               </FormControl>

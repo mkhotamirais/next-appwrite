@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import { account } from "@/appwrite/config";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import DesktopNav from "./desktop-nav";
+import MobileNav from "./mobile-nav";
 
 export function Header() {
   const { user, setUser } = useAuth();
@@ -36,14 +38,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-zinc-900 h-16 border-b">
       <div className="container px-4 mx-auto flex items-center justify-between h-full">
-        <div>
+        <div className="flex gap-2 items-center">
+          <MobileNav />
           <Logo />
         </div>
         <nav className="flex items-center gap-4 text-sm">
-          {/* <div className="flex gap-4">
-            <Link href="/">Home</Link>
-            <Link href="/product">Product</Link>
-          </div> */}
+          <DesktopNav />
           {!user ? (
             <div className="flex gap-2">
               <Button asChild variant="outline">
@@ -59,7 +59,9 @@ export function Header() {
               Logout
             </Button>
           )}
-          <ModeToggle />
+          <div className="hidden md:flex">
+            <ModeToggle />
+          </div>
         </nav>
       </div>
     </header>
