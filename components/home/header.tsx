@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { account } from "@/appwrite/config";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export function Header() {
   const { user, setUser } = useAuth();
@@ -33,17 +34,18 @@ export function Header() {
   };
 
   return (
-    <header className="h-16 border-b">
+    <header className="sticky top-0 z-50 bg-white dark:bg-zinc-900 h-16 border-b">
       <div className="container px-4 mx-auto flex items-center justify-between h-full">
-        <Link href="/">Logo</Link>
+        <div>
+          <Logo />
+        </div>
         <nav className="flex gap-4 text-sm">
           <Link href="/">Home</Link>
-          <Link href="/about">About</Link>
-          <Link href="/contact">Contact</Link>
+          <Link href="/product">Product</Link>
         </nav>
         {!user ? (
           <div className="flex gap-2">
-            <Button asChild variant="link">
+            <Button asChild variant="outline">
               <Link href="/login">Login</Link>
             </Button>
             <Button asChild>
@@ -52,11 +54,20 @@ export function Header() {
             <ModeToggle />
           </div>
         ) : (
-          <Button disabled={pending} onClick={onLogout}>
-            {pending ? "loading.." : "Logout"}
+          <Button variant={"secondary"} disabled={pending} onClick={onLogout}>
+            {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Logout
           </Button>
         )}
       </div>
     </header>
   );
 }
+
+export const Logo = () => {
+  return (
+    <Link href="/" className="text-lg font-semibold">
+      NEXT<span className="text-primary">APPWRITE</span>
+    </Link>
+  );
+};

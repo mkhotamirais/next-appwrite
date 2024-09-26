@@ -34,7 +34,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <UserProvider>
             <div className="flex flex-col min-h-screen bg-white dark:bg-black">
-              <Toaster richColors position="top-center" />
+              <Toaster richColors />
               <Header />
               <main className="grow container mx-auto px-4">{children}</main>
               <Footer />

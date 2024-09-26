@@ -91,14 +91,8 @@ export function RegisterForm() {
           )}
         />
         <Button disabled={pending} type="submit" className="w-full">
-          {pending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Please wait
-            </>
-          ) : (
-            "Register"
-          )}
+          {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Register
         </Button>
       </form>
     </Form>

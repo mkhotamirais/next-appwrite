@@ -76,15 +76,9 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          {pending ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Please wait
-            </>
-          ) : (
-            "Login"
-          )}
+        <Button disabled={pending} type="submit" className="w-full">
+          {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Login
         </Button>
       </form>
     </Form>

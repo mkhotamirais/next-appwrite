@@ -1,7 +1,7 @@
-import { Account, Client } from "appwrite";
+import { Account, Client, Databases } from "appwrite";
 
-const dbShopId = process.env.NEXT_PUBLIC_APPWRITE_DB_SHOP_ID;
-const collProductsId = process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_PRODUCTS_ID;
+const dbShopId = process.env.NEXT_PUBLIC_APPWRITE_DB_SHOP_ID as string;
+const collProductsId = process.env.NEXT_PUBLIC_APPWRITE_COLL_PRODUCTS_ID as string;
 
 const client = new Client();
 
@@ -10,5 +10,6 @@ client
   .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID as string);
 
 const account = new Account(client);
+const databases = new Databases(client);
 
-export { dbShopId, collProductsId, account };
+export { dbShopId, collProductsId, client, account, databases };
