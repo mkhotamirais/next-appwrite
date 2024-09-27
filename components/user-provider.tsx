@@ -13,6 +13,7 @@ export default function UserProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     setUser();
+    // setOUser();
   }, [setUser]);
 
   if (!isMounted) return null;

@@ -12,6 +12,8 @@ interface AuthState {
 
 export const useAuth = create<AuthState>((set) => ({
   user: null,
+  session: null,
+
   setUser: async () => {
     await account
       .get()

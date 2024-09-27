@@ -10,17 +10,31 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Trash } from "lucide-react";
 import GalleryDelDialog from "./gallery-del-dialog";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
+import IsLoginAlert from "@/components/is-login-alert";
+import LoaderMoon from "@/components/loader-moon";
 
 export default function GalleryPage() {
+  const { user } = useAuth();
   const [data, setData] = useState<Bucket[]>([]);
   const [preview, setPreview] = useState("");
   const [pending, setPending] = useState(false);
+  const [pendingPage, setPendingPage] = useState(false);
 
   useEffect(() => {
     const getBucket = async () => {
-      await storage.listFiles(bucketId, [Query.orderDesc("$createdAt")]).then((res) => {
-        setData(res.files as Bucket[]);
-      });
+      setPendingPage(true);
+      await storage
+        .listFiles(bucketId, [Query.orderDesc("$createdAt")])
+        .then((res) => {
+          setData(res.files as Bucket[]);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setPendingPage(false);
+        });
     };
     getBucket();
 
@@ -61,6 +75,14 @@ export default function GalleryPage() {
       setPending(false);
     }
   };
+
+  if (!user) {
+    return <IsLoginAlert />;
+  }
+
+  if (pendingPage) {
+    return <LoaderMoon />;
+  }
 
   return (
     <div className="py-4">
