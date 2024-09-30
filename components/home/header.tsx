@@ -1,67 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "../ui/button";
-import { ModeToggle } from "../mode-toggle";
-import { useAuth } from "@/hooks/use-auth";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { account } from "@/appwrite/config";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import DesktopNav from "./desktop-nav";
 import MobileNav from "./mobile-nav";
+import AuthBtn from "./auth-btn";
+import { ModeToggle } from "../theme/mode-toggle";
 
 export function Header() {
-  const { user, setUser } = useAuth();
-  const [pending, setPending] = useState(false);
-  const router = useRouter();
-
-  const onLogout = async () => {
-    setPending(true);
-    await account
-      .deleteSession("current")
-      .then(() => {
-        setUser();
-        toast.success("Logged out successfully");
-        router.push("/login");
-        router.refresh();
-      })
-      .catch(() => {
-        toast.error("Logged out failed");
-      })
-      .finally(() => {
-        setPending(false);
-      });
-  };
-
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-zinc-900 h-16 border-b">
-      <div className="container px-4 mx-auto flex items-center justify-between h-full">
+      <div className="container flex items-center justify-between h-full">
         <div className="flex gap-2 items-center">
           <MobileNav />
           <Logo />
         </div>
-        <nav className="flex items-center gap-4 text-sm">
+        <nav className="flex items-center gap-6 text-sm">
           <DesktopNav />
-          {!user ? (
-            <div className="flex gap-2">
-              <Button asChild variant="outline">
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/register">Register</Link>
-              </Button>
-            </div>
-          ) : (
-            <Button variant={"secondary"} disabled={pending} onClick={onLogout}>
-              {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Logout
-            </Button>
-          )}
-          <div className="hidden md:flex">
-            <ModeToggle />
-          </div>
+          <AuthBtn />
+          <ModeToggle />
         </nav>
       </div>
     </header>

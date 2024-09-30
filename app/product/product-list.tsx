@@ -18,7 +18,7 @@ export default function ProductList() {
     const fetchData = async () => {
       setPending(true);
       await databases
-        .listDocuments(dbShopId, collProductsId, [Query.orderDesc("$createdAt"), Query.limit(5)])
+        .listDocuments(dbShopId, collProductsId, [Query.orderDesc("$createdAt")])
         .then((res) => {
           setData(res?.documents as Product[]);
         })
@@ -49,9 +49,9 @@ export default function ProductList() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
       {data?.map((item) => (
-        <div key={item.$id} className="border rounded p-2">
-          <div>{item.name}</div>
-          <div>
+        <div key={item.$id} className="relative group border rounded p-3">
+          <h3 className="text-primary font-semibold text-xl capitalize">{item.name}</h3>
+          <div className="absolute p-2 top-0 right-0 scale-0 group-hover:scale-100 transition flex gap-1">
             <Button asChild size={"icon"}>
               <Link href={`/product/update/${item.$id}`}>
                 <Edit className="size-4" />

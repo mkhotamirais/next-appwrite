@@ -3,9 +3,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Header } from "@/components/home/header";
 import { Footer } from "@/components/home/footer";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import UserProvider from "@/components/user-provider";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,7 +19,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Nexjs Appwrite",
+  title: "Next Appwrite",
   description: "This project uses nextjs and appwrite",
 };
 
@@ -30,13 +30,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <UserProvider>
             <div className="flex flex-col min-h-screen bg-white dark:bg-black">
               <Toaster richColors />
               <Header />
-              <main className="grow container mx-auto px-4">{children}</main>
+              <main className="grow container">{children}</main>
               <Footer />
             </div>
           </UserProvider>

@@ -3,11 +3,14 @@
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { Logo } from "./header";
-import { ModeToggle } from "../mode-toggle";
-import { navMenu } from "./nav-menu";
 import Link from "next/link";
+import { navMenu } from "@/lib/nav-menu";
+import { usePathname } from "next/navigation";
 
 export default function MobileNav() {
+  const pathname = usePathname();
+  const path1 = pathname.split("/")[1];
+
   return (
     <div className="flex md:hidden">
       <Sheet>
@@ -16,17 +19,19 @@ export default function MobileNav() {
         </SheetTrigger>
         <SheetContent side={"left"}>
           <SheetHeader>
-            <SheetTitle className="flex justify-between">
+            <SheetTitle>
               <Logo />
-              <ModeToggle />
             </SheetTitle>
-            <SheetDescription className="hidden">
-              This action cannot be undone. This will permanently delete your account and remove your data from our
-              servers.
-            </SheetDescription>
-            <div className="flex flex-col gap-2 py-4">
+            <SheetDescription className="hidden">This action cannot be undone</SheetDescription>
+            <div className="flex flex-col py-4">
               {navMenu.map((item, i) => (
-                <Link href={item.href} key={i} className="hover:text-primary">
+                <Link
+                  href={item.href}
+                  key={i}
+                  className={`${
+                    path1 === item.href.split("/")[1] ? "text-primary font-semibold" : ""
+                  } hover:text-primary text-sm py-2`}
+                >
                   {item.label}
                 </Link>
               ))}

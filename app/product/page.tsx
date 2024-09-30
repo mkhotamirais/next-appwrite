@@ -7,7 +7,7 @@ export default function ProductPage() {
   return (
     <div className="py-4">
       <div className="flex justify-between items-center mb-2">
-        <h1 className="text-lg text-primary">Product List</h1>
+        <h1 className="text-lg text-primary font-semibold">Product List</h1>
         <Button asChild>
           <Link href="/product/create">Add New</Link>
         </Button>
