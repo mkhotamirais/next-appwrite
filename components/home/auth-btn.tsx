@@ -15,7 +15,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function AuthBtn() {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
   const [pending, setPending] = useState(false);
   const router = useRouter();
 
@@ -24,7 +24,6 @@ export default function AuthBtn() {
     await account
       .deleteSession("current")
       .then(() => {
-        setUser();
         toast.success("Logged out successfully");
         router.push("/login");
         router.refresh();

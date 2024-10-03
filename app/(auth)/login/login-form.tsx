@@ -9,7 +9,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
 import { account } from "@/appwrite/config";
 import { useState } from "react";
 
@@ -22,7 +21,6 @@ type LoginType = z.infer<typeof LoginSchema>;
 
 export function LoginForm() {
   const [pending, setPending] = useState(false);
-  const { setUser } = useAuth();
   const router = useRouter();
 
   const form = useForm<LoginType>({
@@ -35,7 +33,6 @@ export function LoginForm() {
     await account
       .createEmailPasswordSession(email, password)
       .then(() => {
-        setUser();
         toast.success("Login successful");
         router.push("/");
         router.refresh();
