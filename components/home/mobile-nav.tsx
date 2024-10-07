@@ -1,6 +1,14 @@
 "use client";
 
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { Logo } from "./header";
 import Link from "next/link";
@@ -25,15 +33,16 @@ export default function MobileNav() {
             <SheetDescription className="hidden">This action cannot be undone</SheetDescription>
             <div className="flex flex-col py-4">
               {navMenu.map((item, i) => (
-                <Link
-                  href={item.href}
-                  key={i}
-                  className={`${
-                    path1 === item.href.split("/")[1] ? "text-primary font-semibold" : ""
-                  } hover:text-primary text-sm py-2`}
-                >
-                  {item.label}
-                </Link>
+                <SheetClose key={i} asChild>
+                  <Link
+                    href={item.href}
+                    className={`${
+                      path1 === item.href.split("/")[1] ? "text-primary font-semibold" : ""
+                    } hover:text-primary text-sm py-2`}
+                  >
+                    {item.label}
+                  </Link>
+                </SheetClose>
               ))}
             </div>
           </SheetHeader>

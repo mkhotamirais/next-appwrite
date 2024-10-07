@@ -30,21 +30,16 @@ export default function ProductList() {
     fetchData();
 
     const unsubscribe = client.subscribe(`databases.${dbShopId}.collections.${collProductsId}.documents`, (res) => {
-      if (res.events.includes("databases.*.collections.*.documents.*.create")) {
-        // console.log("a message was created");
-        setData((prev) => [res.payload, ...prev] as Product[]);
-      }
       if (res.events.includes("databases.*.collections.*.documents.*.delete")) {
-        // console.log("a message was deleted");
         setData((prev) => prev.filter((item) => item.$id !== (res?.payload as Product).$id));
       }
     });
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
   if (pending) return <LoaderMoon />;
+
+  if (data?.length === 0) return <div>No Data</div>;
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">

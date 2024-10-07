@@ -5,7 +5,7 @@ import { MoonLoader } from "react-spinners";
 
 export default function LoaderMoon() {
   return (
-    <div className="flex w-full justify-center py-4">
+    <div className="flex w-full justify-center py-4 select-none">
       <MoonLoader color="hsl(var(--primary))" size={40} />
     </div>
   );

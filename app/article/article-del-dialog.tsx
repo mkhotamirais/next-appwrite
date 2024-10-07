@@ -11,20 +11,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Loader2, Trash2 } from "lucide-react";
-import { Product } from "./types";
-import { collProductsId, databases, dbShopId } from "@/appwrite/config";
+import { collArticlesId, databases, dbShopId } from "@/appwrite/config";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Article } from "./types";
 
-export default function ProductDelDialog({ item }: { item: Product }) {
+export default function ArticleDelDialog({ item }: { item: Article }) {
   const [pending, setPending] = useState(false);
 
   const onDelete = async () => {
     setPending(true);
     await databases
-      .deleteDocument(dbShopId, collProductsId, item?.$id)
+      .deleteDocument(dbShopId, collArticlesId, item?.$id)
       .then(() => {
-        toast.success(`Delete ${item.name} success`);
+        toast.success(`Delete ${item.title} success`);
       })
       .catch((err) => {
         console.log(err);
@@ -37,7 +37,7 @@ export default function ProductDelDialog({ item }: { item: Product }) {
   };
 
   return (
-    <Dialog>
+    <Dialog key={item.$id}>
       <DialogTrigger asChild>
         <Button size={"icon"} variant={"destructive"}>
           <Trash2 className="size-4" />
@@ -46,7 +46,7 @@ export default function ProductDelDialog({ item }: { item: Product }) {
       <DialogContent>
         <DialogHeader className="space-y-4">
           <DialogTitle>
-            Delete <span className="text-primary italic">{item.name}</span>, Are you sure?
+            Delete <span className="text-primary italic">{item.title}</span>, Are you sure?
           </DialogTitle>
           <DialogDescription>This action cannot be undone!</DialogDescription>
           <div className="flex gap-2">

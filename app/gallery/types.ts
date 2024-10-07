@@ -1,13 +1,10 @@
-export type Bucket = {
+export type Gallery = {
+  $collectionId: string;
   $createdAt: string;
+  $databaseId: string;
   $id: string;
   $permissions: string[];
   $updatedAt: string;
-  bucketId: string;
-  chunksTotal: number;
-  chunksUploaded: number;
-  mimeType: string;
+  imageId: string;
   name: string;
-  signature: string;
-  sizeOriginal: number;
 };
