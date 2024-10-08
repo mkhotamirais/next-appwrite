@@ -45,7 +45,7 @@ export default function CreateGalleryForm() {
     await storage
       .createFile(bucketId, ID.unique(), image)
       .then((res) => {
-        databases.createDocument(dbShopId, collGalleryId, ID.unique(), { name, imageId: res.$id }).then((res) => {
+        databases.createDocument(dbShopId, collGalleryId, ID.unique(), { name, imageId: res.$id }).then(() => {
           toast.success("Image uploaded successfully");
           router.push("/gallery");
           router.refresh();
